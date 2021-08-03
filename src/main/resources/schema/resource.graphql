@@ -1,0 +1,140 @@
+scalar DateTime
+
+type Resource {
+	id: ID!
+	title: String
+	description: String
+	author: Author
+	platform: Platform
+	publicationYear: Int
+	type: Type
+	url: String
+	topics: [Topic]
+	length: Float
+	rating: Float
+	level: Level
+	createdDate: DateTime
+	updatedDate: DateTime
+	completed: Boolean
+}
+
+enum Type {
+	COURSE, BOOK, GUIDE, VIDEO, WEBSITE, UNKNOWN
+}
+
+enum Level {
+	BEGINNER, INTERMEDIATE, EXPERT, ALL
+}
+
+type Author {
+	id: ID!
+	name: String
+}
+
+type Platform {
+	id: ID!
+	name: String
+	url: String
+}
+
+type Topic {
+	id: ID!
+	name: String
+	description: String
+}
+
+input ResourceFilter {
+	type: String
+	platformId: String
+	topicId: String
+	title: String
+}
+
+input ResourceInput {
+	title: String
+	description: String
+	authorName: String
+	platformId: Int
+	publicationYear: Int
+	type: Type!
+	url: String
+	topics: [Int!]
+	length: Float
+	rating: Float
+	level: Level
+	completed: Boolean!
+}
+
+input ResourceUpdateInput {
+	id: ID!
+	title: String
+	description: String
+	authorName: String
+	platformId: Int
+	publicationYear: Int
+	type: Type!
+	url: String
+	topics: [Int!]
+	length: Float
+	rating: Float
+	level: Level
+	completed: Boolean!
+}
+
+input ResourceCompleteInput {
+	id: Int!
+	completed: Boolean
+}
+
+input TopicInput {
+	name: String!
+	description: String
+}
+
+input TopicUpdateInput {
+	id: Int!
+	name: String!
+	description: String
+}
+
+input PlatformInput {
+	name: String
+	url: String
+}
+
+input PlatformUpdateInput {
+	id: Int!
+	name: String
+	url: String
+}
+
+type Query {
+	"""List of All Resources"""
+	allResources: [Resource]
+	"""Get Single Resource By Id"""
+	resource(id: String!): Resource
+	"""Filtered List of Resources"""
+	resources(filter: ResourceFilter): [Resource]
+	"""List of All Topics"""
+	allTopics: [Topic]
+	"""List of All Platforms"""
+	allPlatforms: [Platform]
+}
+
+type Mutation {
+	addResource(resource: ResourceInput): Int
+	updateResource(resource: ResourceUpdateInput): Resource
+	markResourceCompleted(id: Int!, completed: Boolean!): Int
+	deleteResource(resourceId: Int!): Int
+	addTopic(topic: TopicInput): Int
+	updateTopic(topic: TopicUpdateInput): Topic
+	deleteTopic(topicId: Int!): Int
+	addPlatform(platform: PlatformInput): Int
+	updatePlatform(platform: PlatformUpdateInput): Platform
+	deletePlatform(platformId: Int!): Int
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+}
